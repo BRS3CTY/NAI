@@ -10,11 +10,12 @@ while(cap.isOpened()):
     
     # odczyt obrazu
     # ret to boolean czy jest obraz czy nie, czy wywietla się ramka
-    ret, img = cap.read()
-    
+    ret, img, = cap.read()
+    ret, img2, = cap.read()
     # Mirror kamery
-    img = cv2.flip(img, 1)
-
+    img= cv2.flip(img, 1)
+    
+    
     # Do zmiennej grey wgrywamy konwersje RGB do sklai szarosci
     grey = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
@@ -48,12 +49,11 @@ while(cap.isOpened()):
 
     # odnadywanie defektów połączeń/wypukłosci - "palców"
     defects = cv2.convexityDefects(cnt, hull)
-   
-   # zliczanie defektów
+    # zliczanie
     count_defects = 0
     cv2.drawContours(thresh1, contours, -1, (0, 255, 0), 3)
 
-    # Zwraca tabicę dla defektów w której każdy wiersz zawiera wartosci:
+    # Zwraca tabicę dla defektów w której każdy wiersz zawiera wartoci:
     # pkt początkowy, pkt końcowy, najdalszy punkt, 
     for i in range(defects.shape[0]):
         s,e,f,d = defects[i,0]
@@ -82,19 +82,21 @@ while(cap.isOpened()):
     # definiowanie akcji wg iloci defektów
     # (źródło, tekst, wielkosć czcionki, czcionka, centrowanie)
     if count_defects == 1:
-        cv2.putText(img,"Dwa", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        cv2.putText(img2,"Dwa", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 2:
-        cv2.putText(img,"Trzy", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        cv2.putText(img2,"Trzy", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 3:
-        cv2.putText(img,"Cztery", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        cv2.putText(img2,"Cztery", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     elif count_defects == 4:
-        cv2.putText(img,"Piec", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        cv2.putText(img2,"Piec", (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
     else:
-        cv2.putText(img,"Dziala!", (50, 50),cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
+        cv2.putText(img2,"Dziala!", (50, 50),cv2.FONT_HERSHEY_SIMPLEX, 2, 2)
 
     # Wyswietlanie okien
     all = np.hstack((drawing, img))
-    cv2.imshow('Pokaz', all)
+    #cv2.imshow('out', all)
+    cv2.imshow('out', img2)
+    #cv2.imshow('Pokaz', all)
     cv2.imshow('Prog adaptacyjny', thresh1)
 
     k = cv2.waitKey(10)
